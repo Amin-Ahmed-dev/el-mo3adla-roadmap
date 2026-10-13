@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="description" content="A step-by-step study roadmap: learn, solve, practice." />
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#F7F9FC" />
+    <meta name="theme-color" content="#0f1220" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+
+    <!-- --- OPENGRAF (social embeds) --- -->
+    <meta property="og:title" content="El Mo3adla Roadmap" />
+    <meta property="og:description" content="English & math study route with auto-saved progress." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://el-mo3adla-roadmap.netlify.app/" />
+    <meta property="og:image" content="https://el-mo3adla-roadmap.netlify.app/og-image.png" />
+    <meta property="og:image:alt" content="El Mo3adla — study roadmap with auto-saved progress" />
+    <meta property="og:site_name" content="El Mo3adla" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- Boot splash: inline critical CSS so the pre-React loader is styled
+         instantly (the bundled stylesheet loads async via JS). -->
+    <style>
+      #boot-splash{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:#0f1220}
+      @media (prefers-color-scheme:light){#boot-splash{background:#f7f9fc}}
+      #boot-splash .boot-inner{display:flex;flex-direction:column;align-items:center;gap:18px}
+      #boot-splash .boot-badge{width:76px;height:76px;border-radius:22px;display:flex;align-items:center;justify-content:center;font:700 38px/1 Georgia,'Times New Roman',serif;color:#fff;background:linear-gradient(135deg,#2563eb,#7c3aed);box-shadow:0 12px 40px rgba(37,99,235,.45);animation:boot-pop .55s cubic-bezier(.2,.9,.25,1.2) both}
+      #boot-splash .boot-bar{width:150px;height:5px;border-radius:99px;overflow:hidden;background:rgba(148,163,184,.25)}
+      #boot-splash .boot-bar i{display:block;height:100%;width:40%;border-radius:99px;background:linear-gradient(90deg,#2563eb,#7c3aed);animation:boot-slide 1.1s ease-in-out infinite}
+      @keyframes boot-pop{from{opacity:0;transform:scale(.7) translateY(10px)}to{opacity:1;transform:none}}
+      @keyframes boot-slide{0%{transform:translateX(-110%)}100%{transform:translateX(280%)}}
+      @media (prefers-reduced-motion:reduce){#boot-splash .boot-badge{animation:none}#boot-splash .boot-bar i{animation:none;width:100%}}
+    </style>
+
+    <title>El Mo3adla Roadmap</title>
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=STIX+Two+Text:ital,wght@0,500;0,600;0,700;1,500;1,600;1,700&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <div id="root"></div>
+    <div id="boot-splash" aria-hidden="true"><div class="boot-inner"><div class="boot-badge">M</div><div class="boot-bar"><i></i></div></div></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

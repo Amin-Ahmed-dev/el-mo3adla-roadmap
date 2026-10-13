@@ -1,0 +1,8 @@
+# Netlify: build the Vite app and publish dist/. The hash router (#/...) needs
+# no redirects — every route is served from index.html.
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "20"
