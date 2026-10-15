@@ -80,6 +80,21 @@ export default function AccountModal({ onClose, syncing, initialTab }) {
     }
     setBusy(true); say('');
     try {
+      // Sign-up pre-flight (/api/check-email edge function): reject
+      // undeliverable and throwaway addresses BEFORE Supabase creates the
+      // account. Fail-open by design — if the checker is unreachable the
+      // sign-up proceeds and the confirmation email stays the backstop.
+      if (tab === 'up') {
+        const verdict = await fetch(`/api/check-email?email=${encodeURIComponent(em)}`)
+          .then((r) => r.json())
+          .catch(() => ({ ok: true }));
+        if (verdict && verdict.ok === false) {
+          say(verdict.reason === 'disposable'
+            ? 'Temporary (throwaway) email addresses are not allowed — use your real email.'
+            : 'This email address cannot receive mail. Please double-check it.');
+          return;
+        }
+      }
       const res = tab === 'in' ? await signIn(em, password)
         : tab === 'up' ? await signUp(em, password)
         : await resetPassword(em);
