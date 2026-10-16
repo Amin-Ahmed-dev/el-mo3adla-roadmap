@@ -70,6 +70,8 @@ export default defineSubject({
             phLesson('ph-c1-l3', 'Lesson 3', "Ohm's law for closed circuits", {
               learn: [
                 video('Part 1', 'https://youtu.be/cLgPwVzIv58'),
+                video('Part 2', 'https://youtu.be/Gelz42q7fSY'),
+                video('Part 3', 'https://youtu.be/76tTqjbrn5U'),
               ],
             }),
             phLesson('ph-c1-l4', 'Lesson 4', "Kirchhoff's laws"),
