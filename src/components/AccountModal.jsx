@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react';
+﻿import { useEffect, useState } from 'react';
 import Icon from './Icon.jsx';
 import { SITE } from '../config.js';
 import { isCloudConfigured } from '../lib/supabase.js';
 import { resetPassword, signIn, signOut, signUp, updatePassword, useSession } from '../store/session.js';
+import { checkEmailDeliverable, emailVerdictMessage } from '../lib/emailCheck.js';
 import { firstPasswordIssue, validatePassword } from '../lib/password.js';
 import { cancelPendingPush, pushNowAsync } from '../lib/cloud.js';
 import { getProgressState } from '../store/progress.js';
@@ -80,20 +81,13 @@ export default function AccountModal({ onClose, syncing, initialTab }) {
     }
     setBusy(true); say('');
     try {
-      // Sign-up pre-flight (/api/check-email edge function): reject
+      // Sign-up pre-flight (client-side email check, works on every host): reject
       // undeliverable and throwaway addresses BEFORE Supabase creates the
-      // account. Fail-open by design — if the checker is unreachable the
-      // sign-up proceeds and the confirmation email stays the backstop.
+      // account. Fail-open by design - if the lookup errors, sign-up proceeds
+      // and the confirmation email stays the verification backstop.
       if (tab === 'up') {
-        const verdict = await fetch(`/api/check-email?email=${encodeURIComponent(em)}`)
-          .then((r) => r.json())
-          .catch(() => ({ ok: true }));
-        if (verdict && verdict.ok === false) {
-          say(verdict.reason === 'disposable'
-            ? 'Temporary (throwaway) email addresses are not allowed — use your real email.'
-            : 'This email address cannot receive mail. Please double-check it.');
-          return;
-        }
+        const blocked = emailVerdictMessage(await checkEmailDeliverable(em));
+        if (blocked) { say(blocked); return; }
       }
       const res = tab === 'in' ? await signIn(em, password)
         : tab === 'up' ? await signUp(em, password)
