@@ -74,7 +74,13 @@ export default defineSubject({
                 video('Part 3', 'https://youtu.be/76tTqjbrn5U'),
               ],
             }),
-            phLesson('ph-c1-l4', 'Lesson 4', "Kirchhoff's laws"),
+            phLesson('ph-c1-l4', 'Lesson 4', "Kirchhoff's laws", {
+              learn: [
+                video('Part 1', 'https://youtu.be/B_osAohh9OE'),
+                video('Part 2', 'https://youtu.be/Y6MPiGgdxZA'),
+                video('Part 3', 'https://youtu.be/OM4KN8ADbsg'),
+              ],
+            }),
           ],
         },
         {
