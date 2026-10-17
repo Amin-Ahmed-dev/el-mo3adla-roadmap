@@ -153,14 +153,13 @@ export default defineSubject({
 
   revision: [
     { title: 'Electricity & Electromagnetism revision', items: [
-      { id: 'rev-ph-c1', title: 'Chapter 1 revision', unit: 'Chapter 1', type: 'Mixed questions',
+      { id: 'rev-ph-c1', title: 'Chapter 1: Current and Ohm’s law', unit: 'Chapter 1', type: 'Mixed questions',
         resources: [
           video('Mixed questions', 'https://youtu.be/YXfpdmEX6hg'),
           pdf('Questions PDF', '/Physics/Revision/q1-questions.pdf'),
           pdf('Answers PDF', '/Physics/Revision/a1-answers.pdf'),
           pdf('Chapter 1 Book', '/Physics/Revision/ph-c1-book.pdf'),
         ] },
-      { id: 'ph-r01', title: 'Chapter 1: Current and Ohm’s law', unit: 'Chapter 1', type: 'Topic revision', url: '' },
       { id: 'ph-r02', title: 'Chapter 2: Magnetic effects', unit: 'Chapter 2', type: 'Topic revision', url: '' },
       { id: 'ph-r03', title: 'Chapter 3: Electromagnetic induction', unit: 'Chapter 3', type: 'Topic revision', url: '' },
       { id: 'ph-r04', title: 'Chapter 4: AC circuits', unit: 'Chapter 4', type: 'Topic revision', url: '' },

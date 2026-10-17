@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import Icon from '../components/Icon.jsx';
 import ResourceRow from '../components/ResourceRow.jsx';
 import ToolkitSection from '../components/ToolkitSection.jsx';
@@ -7,6 +8,7 @@ import { revisionStats } from '../lib/selectors.js';
 export default function RevisionPage({ subject }) {
   const s = useProgress();
   const rv = revisionStats(s, subject);
+  const [collapsed, setCollapsed] = useState({}); // items with resources start open, like lessons
 
   if (rv.total === 0) {
     return (
@@ -42,19 +44,48 @@ export default function RevisionPage({ subject }) {
             const d = !!s.rev[it.id];
             const hasRes = Array.isArray(it.resources) && it.resources.length > 0;
             if (hasRes) {
-              // Lesson-style card: header with the check, then video/PDF rows.
+              // Collapsible lesson-style card: header with the check and a
+              // rotating chevron; opening it shows the video/PDF rows.
+              const isCollapsed = !!collapsed[it.id];
               return (
                 <div className={`ritem has-res ${d ? 'done' : ''}`} key={it.id}>
-                  <div className="rhead">
-                    <button className="check" aria-pressed={d} aria-label={`Mark ${it.title} as done`} onClick={() => toggleRevision(it.id)}>
+                  <div
+                    className="rhead"
+                    role="button"
+                    tabIndex={0}
+                    aria-expanded={!isCollapsed}
+                    style={{ cursor: 'pointer' }}
+                    onClick={() => setCollapsed((prev) => ({ ...prev, [it.id]: !prev[it.id] }))}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        setCollapsed((prev) => ({ ...prev, [it.id]: !prev[it.id] }));
+                      }
+                    }}
+                  >
+                    <button
+                      className="check"
+                      aria-pressed={d}
+                      aria-label={`Mark ${it.title} as done`}
+                      onClick={(e) => { e.stopPropagation(); toggleRevision(it.id); }}
+                    >
                       <Icon name="check" size={16} stroke={3} />
                     </button>
                     <span className="grow"><b>{it.title}</b><span className="small">{it.unit}, {it.type.toLowerCase()}</span></span>
                     <span className="small">{it.resources.length} {it.resources.length === 1 ? 'resource' : 'resources'}</span>
+                    <span
+                      className="unit-toggle-chevron"
+                      style={{ transform: isCollapsed ? 'rotate(0deg)' : 'rotate(90deg)' }}
+                      title={isCollapsed ? 'Show resources' : 'Hide resources'}
+                    >
+                      <Icon name="chev" size={14} stroke={2.5} />
+                    </span>
                   </div>
-                  <ul className="res">
-                    {it.resources.map((r, i) => <ResourceRow key={i} r={r} />)}
-                  </ul>
+                  {!isCollapsed && (
+                    <ul className="res">
+                      {it.resources.map((r, i) => <ResourceRow key={i} r={r} />)}
+                    </ul>
+                  )}
                 </div>
               );
             }
