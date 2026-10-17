@@ -100,6 +100,24 @@ export function validateSubjects(subjects, options = {}) {
           if (!/^https?:\/\//i.test(it.url)) errors.push(`${where} link must start with http:// or https://`);
           noteUrl(it.url, `${it.id} (revision)`);
         }
+        if (it.resources !== undefined) {
+          if (!Array.isArray(it.resources) || it.resources.length === 0) {
+            errors.push(`${where} has an empty resources list`);
+          }
+          for (const r of it.resources || []) {
+            slots++;
+            if (!r.t) errors.push(`${where} has a resource with no title`);
+            if (!KINDS.includes(r.k)) errors.push(`${where} resource "${r.t}" has kind "${r.k}"`);
+            if (!REQ.includes(r.req)) errors.push(`${where} resource "${r.t}" has req "${r.req}"`);
+            if (r.u) {
+              linked++;
+              const okUrl = r.k === 'pdf' ? /^(https?:\/\/|\.?\/)/i.test(r.u) : /^https?:\/\//i.test(r.u);
+              if (!okUrl) errors.push(`${where} resource "${r.t}" link must be a web link, or for a PDF a bundled file path starting with ./`);
+              noteUrl(r.u, `${it.id} (${r.t})`);
+              checkLocalFile(r.u, `${where} resource "${r.t}"`);
+            }
+          }
+        }
       }
     }
     if (s.basics) {

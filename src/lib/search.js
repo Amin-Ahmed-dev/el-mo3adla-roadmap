@@ -18,6 +18,10 @@ function build() {
     for (const r of getRevision(sub)) {
       ix.push({ type: 'Revision', icon: 'revise', title: r.title, meta: `${sub.title}, ${r.group}`, href: `#/${sub.id}/revision`,
                 hay: `${r.title} ${r.group} ${r.type} ${sub.title}`.toLowerCase() });
+      for (const res of r.resources || []) {
+        ix.push({ type: res.k === 'pdf' ? 'PDF' : 'Video', icon: res.k === 'pdf' ? 'file' : 'play', title: res.t, meta: `${sub.title}, ${r.title}`,
+                  href: `#/${sub.id}/revision`, hay: `${res.t} ${r.title} ${r.group} ${sub.title}`.toLowerCase() });
+      }
     }
     if (sub.basics) {
       for (const r of sub.basics.resources) {
