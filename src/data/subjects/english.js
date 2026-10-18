@@ -33,6 +33,7 @@ export default defineSubject({
     resources: [
       video('Basics, part 1', 'https://youtu.be/XqU5n3n0gvQ'),
       video('Basics, part 2', 'https://youtu.be/vYEKaB0C4jQ'),
+      video('Basics, part 3', 'https://youtu.be/JWlcqyFEVpg'),
     ],
   },
 
@@ -62,7 +63,7 @@ export default defineSubject({
           lessons: [
             enLesson('en-u2-l1', 'Unit 2', 'Unit 2: Vocabulary & Grammar', {
               videoTitle: 'Unit 2 Video Explanation',
-              videoUrl: '',
+              videoUrl: 'https://youtu.be/0AZnGV5nJ6k',
               pdfTitle: 'Unit 2 Book',
               pdfUrl: './pdfs/english/en-u2.pdf',
             }),
