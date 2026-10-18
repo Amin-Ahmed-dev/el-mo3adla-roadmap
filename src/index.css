@@ -244,6 +244,7 @@ textarea{scrollbar-width:thin;scrollbar-color:color-mix(in srgb,var(--brand) 35%
 .crumb a:not(.btn):hover{text-decoration:underline}
 .banner{display:flex;flex-wrap:wrap;align-items:center;gap:16px;background:var(--ok-tint);border:1px solid color-mix(in srgb,var(--ok) 35%,transparent);border-radius:16px;padding:16px 20px;margin:20px 0 4px}
 .banner .grow{flex:1;min-width:200px}
+.banner.lock-banner{background:var(--brand-tint);border:1px solid color-mix(in srgb,var(--brand) 30%,transparent)}
 .cta{display:flex;flex-wrap:wrap;gap:12px;margin:22px 0 30px}
 .steps{position:relative;padding-left:52px;--c:var(--brand)}
 .step{position:relative;padding-bottom:18px}
