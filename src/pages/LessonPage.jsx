@@ -111,10 +111,10 @@ export default function LessonPage({ lesson: l }) {
               ? <span className="btn line off" aria-disabled="true" title={`Complete “${blocker.title}” first`}><Icon name="lock" size={14} />Mark lesson completed</span>
               : <button className="btn line" onClick={complete}>Mark lesson completed</button>}
           </>
+        ) : blocker ? (
+          <span className="btn off" aria-disabled="true" title={`Complete “${blocker.title}” first`}><Icon name="lock" size={16} />Complete lesson</span>
         ) : (
-          {blocker
-            ? <span className="btn off" aria-disabled="true" title={`Complete “${blocker.title}” first`}><Icon name="lock" size={16} />Complete lesson</span>
-            : <button className="btn" onClick={complete}><Icon name="check" size={17} stroke={2.8} />Complete lesson</button>}
+          <button className="btn" onClick={complete}><Icon name="check" size={17} stroke={2.8} />Complete lesson</button>
         )}
       </div>
 
