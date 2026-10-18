@@ -1,6 +1,7 @@
 import { useSyncExternalStore } from 'react';
 import { SITE } from '../config.js';
 import { lessonById } from '../data/catalog.js';
+import { lessonBlockedBy } from '../lib/selectors.js';
 import { fireConfetti } from '../lib/confetti.js';
 
 /**
@@ -358,7 +359,10 @@ export const toggleStep = (id, key) => {
 
 export const completeLesson = (id) => {
   if (gated()) return;
-  const subject = lessonById[id] && lessonById[id].subject;
+  const lesson = lessonById[id];
+  // Sequential-study gate: a lesson can't be completed before the one before it.
+  if (lesson && lessonBlockedBy(state, lesson)) return;
+  const subject = lesson && lesson.subject;
   const keys = subject ? subject.steps.map((s) => s.k) : [];
   playChime('lesson');
   fireConfetti();

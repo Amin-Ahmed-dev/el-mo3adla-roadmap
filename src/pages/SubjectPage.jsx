@@ -5,7 +5,7 @@ import BasicsSection from '../components/BasicsSection.jsx';
 import ToolkitSection from '../components/ToolkitSection.jsx';
 import { getLessons } from '../data/catalog.js';
 import { useProgress } from '../store/progress.js';
-import { continueTarget, lessonHref, lessonState, nextInSubject, revisionStats, status, stepsDone, subjectStats } from '../lib/selectors.js';
+import { continueTarget, lessonBlockedBy, lessonHref, lessonState, nextInSubject, revisionStats, status, stepsDone, subjectStats } from '../lib/selectors.js';
 import ComingSoon from './ComingSoon.jsx';
 
 export default function SubjectPage({ subject, onOpenFormulas }) {
@@ -205,6 +205,7 @@ export default function SubjectPage({ subject, onOpenFormulas }) {
                     <div className={`route c-${g.color}`}>
                       {visibleLessons.map((l, i) => {
                         const state = status(s, l);
+                        const blocker = state === 'done' ? null : lessonBlockedBy(s, l);
                         const isNext = nx && nx.id === l.id && state !== 'done';
                         const prevDone = i > 0 && lessonState(s, visibleLessons[i - 1].id).done;
                         const sd = stepsDone(s, l);
@@ -226,6 +227,9 @@ export default function SubjectPage({ subject, onOpenFormulas }) {
                                   </span>
                                 )}
                                 {cf && <span className={`tag ${cf === 'weak' ? 'bad' : cf === 'okay' ? 'warn' : 'ok'}`}>{cf[0].toUpperCase() + cf.slice(1)}</span>}
+                                {blocker && (
+                                  <span className="tag opt" title={`Locked — finish “${blocker.title}” first`}><Icon name="lock" size={12} />Locked</span>
+                                )}
                                 {state === 'done' ? <span className="tag ok"><Icon name="check" size={12} />Done</span>
                                   : isNext ? <span className="tag next">Next up</span>
                                   : state === 'prog' ? <span className="tag warn">In progress</span> : null}

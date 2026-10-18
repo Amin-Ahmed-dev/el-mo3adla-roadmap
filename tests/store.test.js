@@ -6,9 +6,11 @@ import {
   normalize,
   exportCode,
   importCode,
+  completeLesson,
   addStudySeconds,
   setLessonNote,
 } from '../src/store/progress.js';
+import { ACTIVE, getLessons } from '../src/data/catalog.js';
 
 /** Same encoding exportCode() uses, so tests can build codes by hand. */
 const encode = (value) => {
@@ -206,6 +208,25 @@ test('setLessonNote() writes and clears notes', () => {
   assert.equal(s.notes.y, 'new note');
   // An immediate save also flushes any write batched by the calls above,
   // so no deferred localStorage write is left pending for this test process.
+  assert.equal(importCode(encode({ lessons: {} })), true);
+});
+
+/* --------------------------- sequential-study gate --------------------------- */
+
+test('completeLesson refuses a lesson before the one before it is done', () => {
+  importCode(encode({ lessons: {} }));
+  const [first, second] = getLessons(ACTIVE[0]);
+  // The second lesson stays locked while the first one is pending.
+  completeLesson(second.id);
+  let s = decode(exportCode());
+  assert.ok(!s.lessons[second.id] || !s.lessons[second.id].done, 'locked lesson must not be completed');
+  // Finishing the first lesson unlocks the second.
+  completeLesson(first.id);
+  completeLesson(second.id);
+  s = decode(exportCode());
+  assert.equal(s.lessons[first.id].done, true);
+  assert.equal(s.lessons[second.id].done, true);
+  // Flush any batched write the completions scheduled (see the note above).
   assert.equal(importCode(encode({ lessons: {} })), true);
 });
 

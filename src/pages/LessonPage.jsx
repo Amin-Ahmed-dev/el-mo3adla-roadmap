@@ -4,7 +4,7 @@ import ResourceRow from '../components/ResourceRow.jsx';
 import LessonNotes from '../components/LessonNotes.jsx';
 import { getLessons, getRevision } from '../data/catalog.js';
 import { completeLesson, reopenLesson, setConfidence, setLast, toggleStep, useProgress } from '../store/progress.js';
-import { lessonHref, lessonState, nextInSubject, stepsDone } from '../lib/selectors.js';
+import { lessonBlockedBy, lessonHref, lessonState, nextInSubject, stepsDone } from '../lib/selectors.js';
 
 const goTo = (id) => {
   const el = document.getElementById(id);
@@ -25,6 +25,7 @@ export default function LessonPage({ lesson: l }) {
   const next = list[l.idx + 1];
   const nxt = nextInSubject(s, subject, l.idx);
   const curStep = steps.find((x) => !st.steps[x.k]);
+  const blocker = done ? null : lessonBlockedBy(s, l);
   const hasRevision = getRevision(subject).length > 0;
   const finishHref = hasRevision ? `#/${subject.id}/revision` : `#/${subject.id}`;
 
@@ -75,6 +76,16 @@ export default function LessonPage({ lesson: l }) {
         {l.label} in {l.unit.title.toLowerCase()}. {done ? `All ${steps.length} steps are done.` : `${sd} of ${steps.length} steps done.`}
       </p>
 
+      {!done && blocker && (
+        <div className="banner lock-banner">
+          <span style={{ color: 'var(--muted)' }}><Icon name="lock" size={22} /></span>
+          <div className="grow">
+            <b className="h3">Finish “{blocker.title}” first</b>
+            <p className="small">Lessons unlock in order — complete the previous lesson before marking this one done. You can still explore the resources below.</p>
+          </div>
+          <a className="btn sm line" href={lessonHref(blocker)}>Go to previous lesson<Icon name="chev" size={15} stroke={2.6} /></a>
+        </div>
+      )}
       {done && (
         <div className="banner">
           <span style={{ color: 'var(--ok)' }}><Icon name="check" size={26} stroke={2.8} /></span>
@@ -96,10 +107,14 @@ export default function LessonPage({ lesson: l }) {
         ) : curStep ? (
           <>
             <button className="btn" onClick={() => goTo('step-' + curStep.k)}>{sd === 0 ? steps[0].cta : curStep.cta}<Icon name="chev" size={16} stroke={2.6} /></button>
-            <button className="btn line" onClick={complete}>Mark lesson completed</button>
+            {blocker
+              ? <span className="btn line off" aria-disabled="true" title={`Complete “${blocker.title}” first`}><Icon name="lock" size={14} />Mark lesson completed</span>
+              : <button className="btn line" onClick={complete}>Mark lesson completed</button>}
           </>
         ) : (
-          <button className="btn" onClick={complete}><Icon name="check" size={17} stroke={2.8} />Complete lesson</button>
+          {blocker
+            ? <span className="btn off" aria-disabled="true" title={`Complete “${blocker.title}” first`}><Icon name="lock" size={16} />Complete lesson</span>
+            : <button className="btn" onClick={complete}><Icon name="check" size={17} stroke={2.8} />Complete lesson</button>}
         )}
       </div>
 
@@ -112,6 +127,7 @@ export default function LessonPage({ lesson: l }) {
           const req = items.filter((r) => r.req === 'yes').length;
           const count = items.length === 0 ? 'Nothing here yet' : req ? `${req} required` : 'Optional';
           const last = i === steps.length - 1;
+          const completesLesson = steps.every((sx) => sx.k === x.k || !!st.steps[sx.k]);
           return (
             <div className={`step ${sdone ? 'done' : ''} ${isCur ? 'cur' : ''} ${sdone || nextDone ? 'seg' : ''}`} id={`step-${x.k}`} key={x.k}>
               <span className="snode">{sdone ? <Icon name="check" size={15} stroke={3} /> : i + 1}</span>
@@ -125,9 +141,13 @@ export default function LessonPage({ lesson: l }) {
                 <div className="sfoot">
                   {sdone
                     ? <button className="btn line sm" onClick={() => markStep(x.k, true)}>Undo</button>
-                    : (
+                    : completesLesson && blocker ? (
+                      <span className="btn sm off" aria-disabled="true" title={`Complete “${blocker.title}” first`}>
+                        <Icon name="lock" size={14} />Done & Complete Lesson
+                      </span>
+                    ) : (
                       <button className="btn sm" onClick={() => markStep(x.k, false)}>
-                        {steps.every((s) => s.k === x.k || !!st.steps[s.k])
+                        {completesLesson
                           ? <><Icon name="check" size={15} stroke={2.8} />Done & Complete Lesson</>
                           : 'Done, next step'}
                       </button>

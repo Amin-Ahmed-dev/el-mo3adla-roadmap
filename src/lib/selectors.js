@@ -49,6 +49,18 @@ export function nextInSubject(s, subject, i) {
   return null;
 }
 
+/**
+ * Sequential-study gate: the lesson before `lesson` (in the subject's flat
+ * order) must be completed first. Returns that previous lesson when `lesson`
+ * is still locked, or null when it is unlocked. A subject's first lesson is
+ * always unlocked.
+ */
+export function lessonBlockedBy(s, lesson) {
+  const list = getLessons(lesson.subject);
+  const prev = list[lesson.idx - 1];
+  return prev && !lessonState(s, prev.id).done ? prev : null;
+}
+
 /** Where the "Continue" button should go. */
 export function continueTarget(s) {
   const last = s.last && lessonById[s.last];

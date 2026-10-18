@@ -11,6 +11,7 @@ import {
   revisionStats,
   overallStats,
   nextInSubject,
+  lessonBlockedBy,
   continueTarget,
   weakLessons,
   hasStarted,
@@ -129,4 +130,13 @@ test('weakLessons lists lessons marked weak', () => {
 
 test('subjectNextStep points at the basics first', () => {
   assert.deepEqual(subjectNextStep(fresh(), sub), { label: 'Start with the basics', tone: 'start' });
+});
+
+test('lessonBlockedBy locks a lesson until the one before it is done', () => {
+  const [first, second] = lessons;
+  // The first lesson of a subject is always unlocked; later lessons are locked while pending.
+  assert.equal(lessonBlockedBy(fresh(), first), null);
+  assert.equal(lessonBlockedBy(fresh(), second), first);
+  // Completing the previous lesson unlocks the next one.
+  assert.equal(lessonBlockedBy(doneState([first]), second), null);
 });
